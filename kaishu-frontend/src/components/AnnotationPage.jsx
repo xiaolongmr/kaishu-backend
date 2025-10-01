@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col, Card, List, Image, Input, Button, Typography, message, Spin, Alert, Space, Tooltip, Popover, Switch } from 'antd';
-import { 
-  SearchOutlined, 
-  DeleteOutlined, 
-  EditOutlined, 
-  PlusOutlined, 
-  RollbackOutlined, 
-  EnvironmentOutlined, 
-  ColumnWidthOutlined, 
-  ZoomInOutlined, 
-  CloseCircleOutlined, 
-  UserOutlined, 
+import {
+  SearchOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  PlusOutlined,
+  RollbackOutlined,
+  EnvironmentOutlined,
+  ColumnWidthOutlined,
+  ZoomInOutlined,
+  CloseCircleOutlined,
+  UserOutlined,
   InfoCircleOutlined,
   ScanOutlined,
   AlignCenterOutlined
@@ -42,7 +42,7 @@ const AnnotationPage = () => {
   const { commentSettings } = useCommentSettings('annotate'); // 获取字体标注页面评论设置
   // 添加移动端检测状态
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  
+
   // 米字格检测相关状态
   const [enableGridDetection, setEnableGridDetection] = useState(false);
   const [gridSize, setGridSize] = useState({ width: 0, height: 0 });
@@ -84,11 +84,11 @@ const AnnotationPage = () => {
 
   useEffect(() => {
     fetchWorks();
-    
+
     // 检查URL参数中是否有作品ID
     const urlParams = new URLSearchParams(location.search);
     const workIdFromUrl = urlParams.get('workId');
-    
+
     if (workIdFromUrl) {
       // 等待作品列表加载完成后自动选择相应作品
       const interval = setInterval(() => {
@@ -101,7 +101,7 @@ const AnnotationPage = () => {
           clearInterval(interval);
         }
       }, 100);
-      
+
       // 设置超时防止无限等待
       setTimeout(() => clearInterval(interval), 5000);
     } else {
@@ -121,7 +121,7 @@ const AnnotationPage = () => {
             clearInterval(interval);
           }
         }, 100);
-        
+
         // 设置超时防止无限等待
         setTimeout(() => clearInterval(interval), 5000);
       }
@@ -153,7 +153,7 @@ const AnnotationPage = () => {
         credentials: 'include',
         body: JSON.stringify({ imageUrl })
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         setGridSize({ width: data.gridWidth, height: data.gridHeight });
@@ -173,15 +173,15 @@ const AnnotationPage = () => {
     setSelectedAnnotation(null);
     setCharacterName('');
     setIsEditMode(false);
-    
+
     // 更新URL中的workId参数
     navigate(`/annotate?workId=${work.id}`, { replace: true });
-    
+
     try {
       const response = await fetch(`/api/works/${work.id}/annotations`, { credentials: 'include' });
       const data = await response.json();
       setAnnotations(data);
-      
+
       // 如果启用了米字格检测，自动检测
       if (enableGridDetection) {
         await detectGrid(`/images/${encodeURIComponent(work.filename)}`);
@@ -195,13 +195,13 @@ const AnnotationPage = () => {
   const handleAnnotationSelect = (annotation) => {
     setSelectedAnnotation(annotation);
     // 如果标注有对应的字符名称，则自动填充
-    const existingAnnotation = annotations.find(a => 
-      a.position_x === annotation.x && 
-      a.position_y === annotation.y && 
-      a.width === annotation.width && 
+    const existingAnnotation = annotations.find(a =>
+      a.position_x === annotation.x &&
+      a.position_y === annotation.y &&
+      a.width === annotation.width &&
       a.height === annotation.height
     );
-    
+
     if (existingAnnotation) {
       setCharacterName(existingAnnotation.character_name || '');
       setIsEditMode(true);
@@ -226,7 +226,7 @@ const AnnotationPage = () => {
 
     try {
       message.info(`${isEditMode ? '更新' : '保存'}标注到云端数据库...`);
-      
+
       // 获取当前用户ID（如果有的话）
       let userId = null;
       if (currentUser && currentUser.id) {
@@ -248,7 +248,7 @@ const AnnotationPage = () => {
           console.error('无法获取用户ID:', e);
         }
       }
-      
+
       // 构建请求体
       const requestBody = {
         workId: selectedWork.id,
@@ -266,7 +266,7 @@ const AnnotationPage = () => {
         requestBody.perspectiveCorrection = true;
         requestBody.fourPoints = selectedAnnotation.fourPoints;
       }
-      
+
       const response = await fetch('/api/annotate', {
         method: 'POST',
         headers: {
@@ -278,10 +278,10 @@ const AnnotationPage = () => {
 
       const result = await response.json();
       console.log('标注API响应:', result);
-      
+
       if (response.ok) {
         message.success(`标注已${result.isUpdate ? '更新' : '保存'}到云端数据库: ${characterName}`);
-        
+
         // 更新标注列表
         const newAnnotation = {
           id: result.annotationId,
@@ -295,44 +295,44 @@ const AnnotationPage = () => {
           // 如果有用户ID，也包含进去
           ...(userId && { user_id: userId }),
           // 如果有透视校正数据，也包含进来
-          ...(selectedAnnotation.perspectiveCorrection && { 
+          ...(selectedAnnotation.perspectiveCorrection && {
             perspectiveCorrection: true,
             fourPoints: selectedAnnotation.fourPoints
           })
         };
-        
-        const annotationExists = annotations.some(a => 
-          a.position_x === selectedAnnotation.x && 
-          a.position_y === selectedAnnotation.y && 
-          a.width === selectedAnnotation.width && 
+
+        const annotationExists = annotations.some(a =>
+          a.position_x === selectedAnnotation.x &&
+          a.position_y === selectedAnnotation.y &&
+          a.width === selectedAnnotation.width &&
           a.height === selectedAnnotation.height
         );
-        
+
         if (!annotationExists) {
           setAnnotations([...annotations, newAnnotation]);
         } else {
           // 更新现有标注
-          setAnnotations(annotations.map(a => 
-            (a.position_x === selectedAnnotation.x && 
-             a.position_y === selectedAnnotation.y && 
-             a.width === selectedAnnotation.width && 
-             a.height === selectedAnnotation.height) 
+          setAnnotations(annotations.map(a =>
+            (a.position_x === selectedAnnotation.x &&
+              a.position_y === selectedAnnotation.y &&
+              a.width === selectedAnnotation.width &&
+              a.height === selectedAnnotation.height)
               ? newAnnotation : a
           ));
         }
-        
+
         // 保存到localStorage以防止刷新丢失
-        localStorage.setItem(`annotations_${selectedWork.id}`, JSON.stringify([...annotations.filter(a => 
-          !(a.position_x === selectedAnnotation.x && 
-            a.position_y === selectedAnnotation.y && 
-            a.width === selectedAnnotation.width && 
+        localStorage.setItem(`annotations_${selectedWork.id}`, JSON.stringify([...annotations.filter(a =>
+          !(a.position_x === selectedAnnotation.x &&
+            a.position_y === selectedAnnotation.y &&
+            a.width === selectedAnnotation.width &&
             a.height === selectedAnnotation.height)
         ), newAnnotation]));
-        
+
         // 触发标注变化事件以更新计数
         const annotationChangedEvent = new CustomEvent('annotationChanged');
         window.dispatchEvent(annotationChangedEvent);
-        
+
         setCharacterName('');
         setSelectedAnnotation(null);
         setIsEditMode(false);
@@ -349,7 +349,7 @@ const AnnotationPage = () => {
   const handleDeleteAnnotation = async (annotationId) => {
     try {
       message.info('正在从云端数据库删除标注...');
-      
+
       const response = await fetch(`/api/annotations/${annotationId}`, {
         method: 'DELETE',
         credentials: 'include'
@@ -359,18 +359,18 @@ const AnnotationPage = () => {
         // 从列表中移除已删除的标注
         const updatedAnnotations = annotations.filter(a => a.id !== annotationId);
         setAnnotations(updatedAnnotations);
-        
+
         // 更新localStorage
         if (selectedWork) {
           localStorage.setItem(`annotations_${selectedWork.id}`, JSON.stringify(updatedAnnotations));
         }
-        
+
         // 触发标注变化事件以更新计数
         const annotationChangedEvent = new CustomEvent('annotationChanged');
         window.dispatchEvent(annotationChangedEvent);
-        
+
         message.success('标注已从云端数据库成功删除');
-        
+
         // 如果当前选中的就是被删除的标注，则清除选择
         if (selectedAnnotation && Number(selectedAnnotation.id) === annotationId) {
           setSelectedAnnotation(null);
@@ -396,15 +396,15 @@ const AnnotationPage = () => {
   // 创建裁剪图像的URL
   const getCroppedImageUrl = (annotation) => {
     if (!selectedWork) return '';
-    
+
     // 添加时间戳参数避免缓存引起的问题
     const timestamp = new Date().getTime();
-    
+
     // 如果标注包含透视校正信息，则使用标注ID进行裁剪
     if (annotation.perspectiveCorrection || annotation.four_points) {
       return `/api/crop-image?filename=${encodeURIComponent(selectedWork.filename)}&annotationId=${annotation.id}&t=${timestamp}`;
     }
-    
+
     // 否则使用普通矩形裁剪
     return `/api/crop-image?filename=${encodeURIComponent(selectedWork.filename)}&x=${annotation.position_x}&y=${annotation.position_y}&width=${annotation.width}&height=${annotation.height}&t=${timestamp}`;
   };
@@ -450,16 +450,16 @@ const AnnotationPage = () => {
                 <List
                   dataSource={works}
                   renderItem={work => (
-                    <List.Item 
+                    <List.Item
                       onClick={() => handleWorkSelect(work)}
-                      style={{ 
+                      style={{
                         backgroundColor: selectedWork && selectedWork.id === work.id ? '#e6f7ff' : 'transparent',
                         borderLeft: selectedWork && selectedWork.id === work.id ? '3px solid #1890ff' : 'none'
                       }}
                     >
                       <List.Item.Meta
                         avatar={
-                          <div 
+                          <div
                             className="work-image-container"
                             onClick={(e) => {
                               // 阻止事件冒泡，避免触发ListItem的点击事件
@@ -496,23 +496,23 @@ const AnnotationPage = () => {
             )}
           </Card>
         </Col>
-        
+
         {/* 右侧标注区域 */}
         <Col xs={24} md={16} lg={18}>
           {selectedWork ? (
             <Card title={`标注作品: ${selectedWork.original_filename ? decodeURIComponent(selectedWork.original_filename) : (selectedWork.filename ? decodeURIComponent(selectedWork.filename) : '未知文件名')}`}>
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                 <Text strong style={{ marginRight: '10px' }}>
-                  当前作品: 
+                  当前作品:
                 </Text>
-                <Text 
+                <Text
                   ellipsis={{ tooltip: selectedWork.original_filename ? decodeURIComponent(selectedWork.original_filename) : (selectedWork.filename ? decodeURIComponent(selectedWork.filename) : '未知文件名') }}
                   style={{ maxWidth: '300px' }}
                 >
                   {selectedWork.original_filename ? decodeURIComponent(selectedWork.original_filename) : (selectedWork.filename ? decodeURIComponent(selectedWork.filename) : '未知文件名')}
                 </Text>
-                <Button 
-                  type="link" 
+                <Button
+                  type="link"
                   onClick={handleDeselectWork}
                   style={{ marginLeft: '10px' }}
                 >
@@ -521,14 +521,14 @@ const AnnotationPage = () => {
               </div>
               <div style={{ marginBottom: '16px' }}>
                 <Space>
-                  <Switch 
+                  <Switch
                     checked={enableGridDetection}
                     onChange={setEnableGridDetection}
                     checkedChildren="启用米字格检测"
                     unCheckedChildren="关闭米字格检测"
                   />
                   {enableGridDetection && (
-                    <Button 
+                    <Button
                       icon={<ScanOutlined />}
                       onClick={() => detectGrid(`/images/${encodeURIComponent(selectedWork.filename)}`)}
                     >
@@ -537,9 +537,9 @@ const AnnotationPage = () => {
                   )}
                 </Space>
               </div>
-              
+
               <div>
-                <CanvasAnnotator 
+                <CanvasAnnotator
                   imageUrl={`/images/${encodeURIComponent(selectedWork.filename)}`}
                   initialAnnotations={convertAnnotationsForComponent()}
                   onAnnotationAdd={handleAnnotationAdd}
@@ -548,19 +548,19 @@ const AnnotationPage = () => {
                   theme={theme} // 传递主题
                 />
               </div>
-              
+
               {/* 标注表单 */}
               <Card>
                 <Title level={4}>{isEditMode ? '修改标注' : '添加标注'}</Title>
                 <Space direction="vertical" style={{ width: '100%' }} className="annotation-form">
                   <div>
                     <Text strong>字符名称:</Text>
-                    <Input 
-                      value={characterName} 
-                      onChange={(e) => setCharacterName(e.target.value)} 
+                    <Input
+                      value={characterName}
+                      onChange={(e) => setCharacterName(e.target.value)}
                       placeholder="输入字符"
                     />
-                    <Button 
+                    <Button
                       type="primary"
                       onClick={handleAnnotation}
                       disabled={!selectedAnnotation}
@@ -568,9 +568,9 @@ const AnnotationPage = () => {
                     >
                       {isEditMode ? '更新标注' : '保存标注'}
                     </Button>
-                    
+
                     {isEditMode && (
-                      <Button 
+                      <Button
                         onClick={handleCancelEdit}
                         icon={<RollbackOutlined />}
                       >
@@ -579,15 +579,15 @@ const AnnotationPage = () => {
                     )}
                   </div>
                   {annotationStatus && (
-                    <Alert 
-                      message={annotationStatus} 
-                      type={annotationStatus.includes('成功') ? 'success' : 'error'} 
+                    <Alert
+                      message={annotationStatus}
+                      type={annotationStatus.includes('成功') ? 'success' : 'error'}
                       showIcon
                     />
                   )}
                 </Space>
               </Card>
-              
+
               {/* 已有标注列表 */}
               {annotations.length > 0 && (
                 <Card title={`已有标注 (${annotations.length})`}>
@@ -596,15 +596,15 @@ const AnnotationPage = () => {
                       // 创建标注详情内容
                       const detailContent = (
                         <div className="annotation-detail-content">
-                          <p><i className="detail-icon" style={{marginRight: '8px'}}>⏰</i> 标注时间: {formatDate(annotation.annotation_time)}</p>
-                          <p><UserOutlined style={{marginRight: '8px'}} /> 标注作者: {getAnnotationUser(annotation.user_id)}</p>
-                          <p><EnvironmentOutlined style={{marginRight: '8px'}} /> 位置: ({annotation.position_x}, {annotation.position_y})</p>
-                          <p><ColumnWidthOutlined style={{marginRight: '8px'}} /> 尺寸: {annotation.width}×{annotation.height}</p>
+                          <p><i className="detail-icon" style={{ marginRight: '8px' }}>⏰</i> 标注时间: {formatDate(annotation.annotation_time)}</p>
+                          <p><UserOutlined style={{ marginRight: '8px' }} /> 标注作者: {getAnnotationUser(annotation.user_id)}</p>
+                          <p><EnvironmentOutlined style={{ marginRight: '8px' }} /> 位置: ({annotation.position_x}, {annotation.position_y})</p>
+                          <p><ColumnWidthOutlined style={{ marginRight: '8px' }} /> 尺寸: {annotation.width}×{annotation.height}</p>
                         </div>
                       );
-                      
+
                       return (
-                        <div 
+                        <div
                           key={annotation.id}
                           className="annotation-card"
                         >
@@ -622,7 +622,7 @@ const AnnotationPage = () => {
                               onError={(e) => {
                                 console.error('裁剪图像加载失败');
                                 console.error(`裁剪参数: x=${annotation.position_x}, y=${annotation.position_y}, w=${annotation.width}, h=${annotation.height}`);
-                                
+
                                 // 回退到原始完整图像，但是添加裁剪样式
                                 try {
                                   e.target.src = `/images/${encodeURIComponent(selectedWork.filename)}`;
@@ -632,7 +632,7 @@ const AnnotationPage = () => {
                                   e.target.style.height = `${annotation.height}px`;
                                   e.target.style.maxWidth = 'none';
                                   e.target.style.maxHeight = 'none';
-                                } catch(err) {
+                                } catch (err) {
                                   console.error('回退显示出错:', err);
                                 }
                               }}
@@ -642,24 +642,24 @@ const AnnotationPage = () => {
                               }}
                             />
                           </div>
-                          
+
                           <div className="annotation-tools">
-                            <Popover 
-                              content={detailContent} 
-                              title="标注详情" 
+                            <Popover
+                              content={detailContent}
+                              title="标注详情"
                               trigger="click"
                               placement="right"
                             >
-                              <Button 
-                                type="text" 
-                                size="small" 
+                              <Button
+                                type="text"
+                                size="small"
                                 icon={<InfoCircleOutlined />}
                               />
                             </Popover>
-                            
-                            <Button 
-                              type="text" 
-                              size="small" 
+
+                            <Button
+                              type="text"
+                              size="small"
                               icon={<EditOutlined />}
                               onClick={() => {
                                 setSelectedAnnotation({
@@ -679,11 +679,11 @@ const AnnotationPage = () => {
                                 setIsEditMode(true);
                               }}
                             />
-                            
-                            <Button 
+
+                            <Button
                               type="text"
                               danger
-                              size="small" 
+                              size="small"
                               icon={<DeleteOutlined />}
                               onClick={() => handleDeleteAnnotation(annotation.id)}
                             />
@@ -704,7 +704,7 @@ const AnnotationPage = () => {
           )}
         </Col>
       </Row>
-      
+
       {/* 评论区 */}
       {(!commentSettings || commentSettings?.enabled) && (
         <Card title="评论区" style={{ marginTop: '20px' }} id="comments">

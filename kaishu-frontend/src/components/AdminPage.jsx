@@ -41,32 +41,32 @@ const AdminPage = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      
+
       // 获取认证令牌
       const token = localStorage.getItem('token');
       const headers = { 'Authorization': `Bearer ${token}` };
-      
+
       // 获取所有作品
-      const worksResponse = await fetch('/api/works', { 
+      const worksResponse = await fetch('/api/works', {
         headers,
-        credentials: 'include' 
+        credentials: 'include'
       });
       const worksData = await worksResponse.json();
       setWorks(worksData);
-      
+
       // 获取所有标注
-      const annotationsResponse = await fetch('/api/search/', { 
+      const annotationsResponse = await fetch('/api/search/', {
         headers,
-        credentials: 'include' 
+        credentials: 'include'
       });
       const annotationsData = await annotationsResponse.json();
       setAnnotations(annotationsData);
-      
+
       // 获取所有用户（仅管理员可见）
       try {
-        const usersResponse = await fetch('/api/admin/users', { 
+        const usersResponse = await fetch('/api/admin/users', {
           headers,
-          credentials: 'include' 
+          credentials: 'include'
         });
         if (usersResponse.ok) {
           const usersData = await usersResponse.json();
@@ -75,7 +75,7 @@ const AdminPage = () => {
       } catch (e) {
         console.error('获取用户列表失败:', e);
       }
-      
+
       setLoading(false);
     } catch (error) {
       console.error('获取数据失败:', error);
@@ -89,7 +89,7 @@ const AdminPage = () => {
       try {
         // 获取认证令牌
         const token = localStorage.getItem('token');
-        
+
         const response = await fetch(`/api/works/${workId}`, {
           method: 'DELETE',
           headers: {
@@ -97,7 +97,7 @@ const AdminPage = () => {
           },
           credentials: 'include'
         });
-        
+
         if (response.ok) {
           setWorks(works.filter(work => work.id !== workId));
           setAnnotations(annotations.filter(anno => anno.work_id !== workId));
@@ -118,7 +118,7 @@ const AdminPage = () => {
       try {
         // 获取认证令牌
         const token = localStorage.getItem('token');
-        
+
         const response = await fetch(`/api/annotations/${annotationId}`, {
           method: 'DELETE',
           headers: {
@@ -126,7 +126,7 @@ const AdminPage = () => {
           },
           credentials: 'include'
         });
-        
+
         if (response.ok) {
           setAnnotations(annotations.filter(anno => anno.id !== annotationId));
           setMessage({ text: '标注删除成功', type: 'success' });
@@ -140,17 +140,17 @@ const AdminPage = () => {
       }
     }
   };
-  
+
   const handleCreateUser = async () => {
     try {
       if (!newUser.username || !newUser.password) {
         setMessage({ text: '请填写用户名和密码', type: 'error' });
         return;
       }
-      
+
       // 获取认证令牌
       const token = localStorage.getItem('token');
-      
+
       const response = await fetch('/api/admin/users', {
         method: 'POST',
         headers: {
@@ -160,7 +160,7 @@ const AdminPage = () => {
         credentials: 'include',
         body: JSON.stringify(newUser)
       });
-      
+
       if (response.ok) {
         const newUserData = await response.json();
         setUsers([...users, newUserData]);
@@ -175,13 +175,13 @@ const AdminPage = () => {
       setMessage({ text: '创建用户失败: ' + error.message, type: 'error' });
     }
   };
-  
+
   const handleDeleteUser = async (userId) => {
     if (window.confirm('确定要删除这个用户吗？')) {
       try {
         // 获取认证令牌
         const token = localStorage.getItem('token');
-        
+
         const response = await fetch(`/api/admin/users/${userId}`, {
           method: 'DELETE',
           headers: {
@@ -189,7 +189,7 @@ const AdminPage = () => {
           },
           credentials: 'include'
         });
-        
+
         if (response.ok) {
           setUsers(users.filter(user => user.id !== userId));
           setMessage({ text: '用户删除成功', type: 'success' });
@@ -209,7 +209,7 @@ const AdminPage = () => {
     try {
       // 获取认证令牌
       const token = localStorage.getItem('token');
-      
+
       // 创建一个隐藏的a标签用于下载
       const link = document.createElement('a');
       link.href = `/api/admin/export?token=${token}`;
@@ -217,7 +217,7 @@ const AdminPage = () => {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      
+
       setMessage({ text: '数据库导出成功，下载已开始', type: 'success' });
     } catch (error) {
       console.error('导出数据库失败:', error);
@@ -230,13 +230,13 @@ const AdminPage = () => {
     try {
       const file = event.target.files[0];
       if (!file) return;
-      
+
       const formData = new FormData();
       formData.append('database', file);
-      
+
       // 获取认证令牌
       const token = localStorage.getItem('token');
-      
+
       const response = await fetch('/api/admin/import', {
         method: 'POST',
         headers: {
@@ -244,7 +244,7 @@ const AdminPage = () => {
         },
         body: formData
       });
-      
+
       if (response.ok) {
         setMessage({ text: '数据库导入成功', type: 'success' });
         // 重新加载数据
@@ -264,13 +264,13 @@ const AdminPage = () => {
     try {
       // 获取认证令牌
       const token = localStorage.getItem('token');
-      
+
       const response = await fetch('/api/admin/export', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         // 在新窗口中显示数据
@@ -298,7 +298,7 @@ const AdminPage = () => {
     try {
       // 获取认证令牌
       const token = localStorage.getItem('token');
-      
+
       const response = await fetch(`/api/admin/users/${selectedUser.id}/password`, {
         method: 'PUT',
         headers: {
@@ -307,7 +307,7 @@ const AdminPage = () => {
         },
         body: JSON.stringify({ newPassword: values.newPassword })
       });
-      
+
       if (response.ok) {
         message.success('密码修改成功');
         setPasswordModalVisible(false);
@@ -334,7 +334,7 @@ const AdminPage = () => {
   return (
     <div className="admin-page">
       <h2>后台管理</h2>
-      
+
       {messageState.text && (
         <div style={{
           padding: '10px',
@@ -346,10 +346,10 @@ const AdminPage = () => {
           {messageState.text}
         </div>
       )}
-      
+
       <div style={{ marginBottom: '20px' }}>
-        <button 
-          onClick={() => setActiveTab('works')} 
+        <button
+          onClick={() => setActiveTab('works')}
           style={{
             padding: '10px 15px',
             backgroundColor: activeTab === 'works' ? '#4CAF50' : '#f1f1f1',
@@ -362,8 +362,8 @@ const AdminPage = () => {
         >
           作品管理
         </button>
-        <button 
-          onClick={() => setActiveTab('annotations')} 
+        <button
+          onClick={() => setActiveTab('annotations')}
           style={{
             padding: '10px 15px',
             backgroundColor: activeTab === 'annotations' ? '#4CAF50' : '#f1f1f1',
@@ -376,8 +376,8 @@ const AdminPage = () => {
         >
           标注管理
         </button>
-        <button 
-          onClick={() => setActiveTab('users')} 
+        <button
+          onClick={() => setActiveTab('users')}
           style={{
             padding: '10px 15px',
             backgroundColor: activeTab === 'users' ? '#4CAF50' : '#f1f1f1',
@@ -390,8 +390,8 @@ const AdminPage = () => {
         >
           用户管理
         </button>
-        <button 
-          onClick={() => setActiveTab('homepage')} 
+        <button
+          onClick={() => setActiveTab('homepage')}
           style={{
             padding: '10px 15px',
             backgroundColor: activeTab === 'homepage' ? '#4CAF50' : '#f1f1f1',
@@ -405,7 +405,7 @@ const AdminPage = () => {
           首页内容管理
         </button>
         <div style={{ display: 'inline-block', position: 'relative' }}>
-          <button 
+          <button
             onClick={(e) => {
               // 创建一个隐藏的文件输入元素
               const fileInput = document.createElement('input');
@@ -427,16 +427,16 @@ const AdminPage = () => {
             数据管理
           </button>
           {/* 下拉菜单 */}
-          <div style={{ 
-            position: 'absolute', 
-            top: '100%', 
-            left: 0, 
-            backgroundColor: 'white', 
-            boxShadow: '0 2px 8px rgba(0,0,0,0.15)', 
+          <div style={{
+            position: 'absolute',
+            top: '100%',
+            left: 0,
+            backgroundColor: 'white',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
             zIndex: 1000,
             display: activeTab === 'data' ? 'block' : 'none'
           }}>
-            <button 
+            <button
               onClick={handleShowData}
               style={{
                 display: 'block',
@@ -451,7 +451,7 @@ const AdminPage = () => {
             >
               显示数据
             </button>
-            <button 
+            <button
               onClick={(e) => {
                 // 创建一个隐藏的文件输入元素
                 const fileInput = document.createElement('input');
@@ -473,7 +473,7 @@ const AdminPage = () => {
             >
               导入数据
             </button>
-            <button 
+            <button
               onClick={handleExportData}
               style={{
                 display: 'block',
@@ -491,7 +491,7 @@ const AdminPage = () => {
           </div>
         </div>
       </div>
-      
+
       {loading && activeTab !== 'homepage' ? (
         <p>加载中...</p>
       ) : (
@@ -554,7 +554,7 @@ const AdminPage = () => {
                         )}
                       </td>
                       <td style={{ border: '1px solid #ccc', padding: '8px' }}>
-                        <button 
+                        <button
                           onClick={() => handleDeleteWork(work.id)}
                           style={{ backgroundColor: '#f44336', color: 'white', border: 'none', padding: '5px 10px', cursor: 'pointer' }}
                         >
@@ -567,7 +567,7 @@ const AdminPage = () => {
               </table>
             </div>
           )}
-          
+
           {activeTab === 'annotations' && (
             <div>
               <h3>标注管理 ({annotations.length} 个标注)</h3>
@@ -615,7 +615,7 @@ const AdminPage = () => {
                         )}
                       </td>
                       <td style={{ border: '1px solid #ccc', padding: '8px' }}>
-                        <button 
+                        <button
                           onClick={() => handleDeleteAnnotation(annotation.id)}
                           style={{ backgroundColor: '#f44336', color: 'white', border: 'none', padding: '5px 10px', cursor: 'pointer' }}
                         >
@@ -628,50 +628,50 @@ const AdminPage = () => {
               </table>
             </div>
           )}
-          
+
           {activeTab === 'users' && (
             <div>
               <h3>用户管理</h3>
-              
+
               <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#f9f9f9', borderRadius: '5px' }}>
                 <h4 style={{ marginTop: 0 }}>创建新用户</h4>
                 <div style={{ marginBottom: '10px' }}>
                   <label style={{ display: 'block', marginBottom: '5px' }}>用户名:</label>
-                  <input 
-                    type="text" 
-                    value={newUser.username} 
-                    onChange={(e) => setNewUser({...newUser, username: e.target.value})} 
+                  <input
+                    type="text"
+                    value={newUser.username}
+                    onChange={(e) => setNewUser({ ...newUser, username: e.target.value })}
                     style={{ padding: '8px', width: '250px' }}
                   />
                 </div>
                 <div style={{ marginBottom: '10px' }}>
                   <label style={{ display: 'block', marginBottom: '5px' }}>密码:</label>
-                  <input 
-                    type="password" 
-                    value={newUser.password} 
-                    onChange={(e) => setNewUser({...newUser, password: e.target.value})} 
+                  <input
+                    type="password"
+                    value={newUser.password}
+                    onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
                     style={{ padding: '8px', width: '250px' }}
                   />
                 </div>
                 <div style={{ marginBottom: '10px' }}>
                   <label style={{ display: 'flex', alignItems: 'center' }}>
-                    <input 
-                      type="checkbox" 
-                      checked={newUser.isAdmin} 
-                      onChange={(e) => setNewUser({...newUser, isAdmin: e.target.checked})} 
+                    <input
+                      type="checkbox"
+                      checked={newUser.isAdmin}
+                      onChange={(e) => setNewUser({ ...newUser, isAdmin: e.target.checked })}
                       style={{ marginRight: '5px' }}
                     />
                     设为管理员
                   </label>
                 </div>
-                <button 
+                <button
                   onClick={handleCreateUser}
                   style={{ backgroundColor: '#4CAF50', color: 'white', border: 'none', padding: '8px 15px', cursor: 'pointer' }}
                 >
                   创建用户
                 </button>
               </div>
-              
+
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
                   <tr>
@@ -688,33 +688,33 @@ const AdminPage = () => {
                       <td style={{ border: '1px solid #ccc', padding: '8px' }}>{user.id}</td>
                       <td style={{ border: '1px solid #ccc', padding: '8px' }}>{user.username}</td>
                       <td style={{ border: '1px solid #ccc', padding: '8px' }}>
-                        {user.is_admin ? 
-                          <span style={{ color: '#E91E63', fontWeight: 'bold' }}>管理员</span> : 
+                        {user.is_admin ?
+                          <span style={{ color: '#E91E63', fontWeight: 'bold' }}>管理员</span> :
                           <span>普通用户</span>
                         }
                       </td>
                       <td style={{ border: '1px solid #ccc', padding: '8px' }}>{new Date(user.created_at).toLocaleString()}</td>
                       <td style={{ border: '1px solid #ccc', padding: '8px' }}>
-                        <button 
+                        <button
                           onClick={() => showPasswordModal(user)}
-                          style={{ 
-                            backgroundColor: '#17a2b8', 
-                            color: 'white', 
-                            border: 'none', 
-                            padding: '5px 10px', 
+                          style={{
+                            backgroundColor: '#17a2b8',
+                            color: 'white',
+                            border: 'none',
+                            padding: '5px 10px',
                             cursor: 'pointer',
                             marginRight: '5px'
                           }}
                         >
                           <EditOutlined /> 修改密码
                         </button>
-                        <button 
+                        <button
                           onClick={() => handleDeleteUser(user.id)}
-                          style={{ 
-                            backgroundColor: '#f44336', 
-                            color: 'white', 
-                            border: 'none', 
-                            padding: '5px 10px', 
+                          style={{
+                            backgroundColor: '#f44336',
+                            color: 'white',
+                            border: 'none',
+                            padding: '5px 10px',
                             cursor: user.username === currentUser.username ? 'not-allowed' : 'pointer',
                             opacity: user.username === currentUser.username ? 0.5 : 1
                           }}
@@ -729,11 +729,11 @@ const AdminPage = () => {
               </table>
             </div>
           )}
-          
+
           {activeTab === 'homepage' && (
             <HomepageContentEditor />
           )}
-          
+
           {/* 修改密码模态框 */}
           <Modal
             title={`修改用户 ${selectedUser?.username} 的密码`}
@@ -778,11 +778,11 @@ const AdminPage = () => {
               </Form.Item>
             </Form>
           </Modal>
-          
+
           {/* 已移除字体统计区域 */}
         </div>
       )}
-      
+
       {/* 评论区 */}
       {(!commentSettings || commentSettings?.enabled) && (
         <div style={{ marginTop: '20px' }} id="comments">
