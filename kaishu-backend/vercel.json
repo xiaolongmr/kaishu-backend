@@ -35,6 +35,22 @@
           "value": "https://kaishu-frontend-git-main-xiaolongmrs-projects.vercel.app"
         },
         {
+          "key": "Access-Control-Allow-Origin",
+          "value": "https://kaishu-backend-zl.top"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "https://kaishu-backend.vercel.app"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "https://kaishu-backend-zl.top"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "https://kaishu-backend.vercel.app"
+        },
+        {
           "key": "Vercel-CORS-Mode",
           "value": "dynamic"
         }
