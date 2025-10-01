@@ -9,7 +9,9 @@
       "maxDuration": 30
     }
   },
-  "regions": ["hkg1"],
+  "regions": [
+    "hkg1"
+  ],
   "headers": [
     {
       "source": "/api/(.*)",
@@ -36,7 +38,7 @@
         },
         {
           "key": "Access-Control-Allow-Origin",
-          "value": "https://kaishu-backend-zl.top"
+          "value": "https://kaishu-backend.z-l.top"
         },
         {
           "key": "Access-Control-Allow-Origin",
@@ -44,7 +46,7 @@
         },
         {
           "key": "Access-Control-Allow-Origin",
-          "value": "https://kaishu-backend-zl.top"
+          "value": "https://kaishu-backend.z-l.top"
         },
         {
           "key": "Access-Control-Allow-Origin",
