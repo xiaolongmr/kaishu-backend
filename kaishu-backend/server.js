@@ -20,7 +20,7 @@ const allowedOrigins = [
   'http://localhost:5173', // Vite默认端口
   'https://kaishu-frontend-git-main-xiaolongmrs-projects.vercel.app',
   'https://kaishu.z-l.top',
-  'https://kaishu-backend-zl.top',
+  'https://kaishu-backend.z-l.top',
   'https://kaishu-backend.vercel.app',
   process.env.FRONTEND_URL,
   process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null
