@@ -31,7 +31,8 @@
   transition: all 0.3s ease;
 }
 
-body.light-theme .top-nav, .modern-light-theme .top-nav {
+body.light-theme .top-nav,
+.modern-light-theme .top-nav {
   background-color: rgba(255, 255, 255, 0.98);
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
@@ -71,7 +72,8 @@ body.light-theme .top-nav, .modern-light-theme .top-nav {
   border-color: #d0d0d0;
 }
 
-body.light-theme .search-box, .modern-light-theme .search-box {
+body.light-theme .search-box,
+.modern-light-theme .search-box {
   background-color: rgba(240, 240, 240, 0.9);
   color: rgba(0, 0, 0, 0.65);
   border: 1px solid #e0e0e0;
@@ -94,7 +96,8 @@ body.light-theme .search-box, .modern-light-theme .search-box {
   transition: all 0.3s ease;
 }
 
-body.light-theme .keyboard-shortcut, .modern-light-theme .keyboard-shortcut {
+body.light-theme .keyboard-shortcut,
+.modern-light-theme .keyboard-shortcut {
   background-color: rgba(255, 255, 255, 0.7);
   color: rgba(0, 0, 0, 0.5);
   border: none;
@@ -331,6 +334,7 @@ body.light-theme .keyboard-shortcut, .modern-light-theme .keyboard-shortcut {
     transform: scale(1);
     opacity: 0.5;
   }
+
   100% {
     transform: scale(1.1);
     opacity: 0.7;
@@ -364,8 +368,10 @@ body.light-theme .keyboard-shortcut, .modern-light-theme .keyboard-shortcut {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   font-weight: bold !important;
-  display: inline-block; /* 确保元素宽度仅包含文本 */
-  width: auto; /* 自适应宽度 */
+  display: inline-block;
+  /* 确保元素宽度仅包含文本 */
+  width: auto;
+  /* 自适应宽度 */
 }
 
 .hero-title-normal {
@@ -479,9 +485,11 @@ body.light-theme .keyboard-shortcut, .modern-light-theme .keyboard-shortcut {
   0% {
     transform: translateY(0px);
   }
+
   50% {
     transform: translateY(-15px);
   }
+
   100% {
     transform: translateY(0px);
   }
@@ -515,7 +523,7 @@ body.light-theme .keyboard-shortcut, .modern-light-theme .keyboard-shortcut {
 
 /* 新的特性卡片样式 */
 .feature-card-new {
-  background-color: #f8f9fa;
+  background-color: #ffffff;
   border-radius: 12px;
   padding: 30px 20px;
   height: 100%;
@@ -586,17 +594,17 @@ body.light-theme .keyboard-shortcut, .modern-light-theme .keyboard-shortcut {
   .feature-card-new {
     padding: 24px 16px;
   }
-  
+
   .feature-icon-wrapper-new {
     width: 56px;
     height: 56px;
   }
-  
+
   .feature-title-new {
     font-size: 16px !important;
     margin: 12px 0 8px !important;
   }
-  
+
   .feature-description-new {
     font-size: 13px !important;
   }
@@ -678,8 +686,7 @@ body.light-theme .keyboard-shortcut, .modern-light-theme .keyboard-shortcut {
   border-color: rgba(24, 144, 255, 0.3) !important;
 }
 
-.modern-light-theme .step-card:hover {
-}
+.modern-light-theme .step-card:hover {}
 
 .step-number {
   width: 48px;
@@ -739,8 +746,7 @@ body.light-theme .keyboard-shortcut, .modern-light-theme .keyboard-shortcut {
   border-color: rgba(24, 144, 255, 0.3) !important;
 }
 
-.modern-light-theme .gallery-card:hover {
-}
+.modern-light-theme .gallery-card:hover {}
 
 .gallery-image-wrapper {
   padding: 16px;
@@ -793,17 +799,17 @@ body.light-theme .keyboard-shortcut, .modern-light-theme .keyboard-shortcut {
   .top-nav {
     padding: 12px 16px;
   }
-  
+
   .top-nav-logo {
     font-size: 18px;
     margin-right: 0;
   }
-  
+
   .top-nav-mobile-icons {
     display: flex;
     align-items: center;
   }
-  
+
   /* 禁用菜单按钮的点击动画 */
   /* .ant-btn.ant-btn-text.ant-btn-icon-only {
     position: static !important;
@@ -815,33 +821,34 @@ body.light-theme .keyboard-shortcut, .modern-light-theme .keyboard-shortcut {
   /* .ant-btn::after {
     display: none !important;
   } */
-  
+
   .ant-btn-text:active {
     transform: none !important;
   }
-  
+
   .hero-section {
     padding: 40px 16px;
   }
-  
+
   .hero-title-gradient {
     font-size: 36px !important;
   }
-  
+
   .hero-content {
-    flex-direction: column-reverse; /* 这里修改为反向列布局，让image在上、text在下 */
+    flex-direction: column-reverse;
+    /* 这里修改为反向列布局，让image在上、text在下 */
     gap: 20px;
   }
-  
+
   .hero-text {
     text-align: center;
     max-width: 100%;
   }
-  
+
   .hero-buttons {
     justify-content: center;
   }
-  
+
   .simple-image-container {
     width: 180px;
     height: 180px;
@@ -849,7 +856,7 @@ body.light-theme .keyboard-shortcut, .modern-light-theme .keyboard-shortcut {
     box-shadow: none;
     border: none;
   }
-  
+
   .hero-simple-image {
     max-width: 100%;
     max-height: 100%;
@@ -857,17 +864,17 @@ body.light-theme .keyboard-shortcut, .modern-light-theme .keyboard-shortcut {
     border-radius: 0;
     box-shadow: none;
   }
-  
+
   .features-section,
   .gallery-section,
   .steps-section {
     padding: 40px 16px;
   }
-  
+
   .section-title {
     font-size: 28px !important;
   }
-  
+
   .section-subtitle {
     font-size: 16px !important;
   }
